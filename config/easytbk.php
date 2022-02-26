@@ -11,6 +11,7 @@ return [
         'app_key' => env ('TAOBAO_APP_KEY', ''),
         'app_secret' => env ('TAOBAO_APP_SECRET', ''),
         'format' => 'json',
+        'pid' => env('TAOBAO_PID',''),
     ],
     'pinduoduo' => [ // 拼多多
         'client_id' => env ('PDD_CLIENT_ID', ''),

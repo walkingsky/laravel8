@@ -10,6 +10,7 @@ use NiuGengYun\EasyTBK\Factory;
 use NiuGengYun\EasyTBK\pinduoduo\request\DdkGoodsZsUnitUrlGenRequest;
 use NiuGengYun\EasyTBK\taobao\request\TbkSpreadGetRequest;
 use NiuGengYun\EasyTBK\jingdong\request\JdUnionPromotionCommonGetRequest;
+use NiuGengYun\EasyTBK\taobao\request\TbkDgMaterialOptionalRequest;
 
 class TaoKe extends Controller
 {
@@ -43,11 +44,41 @@ class TaoKe extends Controller
         $req = new TbkSpreadGetRequest();
         $req->setRequests (json_encode(['url'=>$source_url]));
         $res = $client->execute ($req);
-        if ($res->results->tbk_spread[0]->err_msg)
+        //print_r($res);
+        if ($res->results->tbk_spread[0]->err_msg != 'OK')
         {
             return $res->results->tbk_spread[0]->err_msg;
         }else{
             return $res->results->tbk_spread[0]->content;
+        }
+    }
+
+    /**
+     * 淘宝客，推广者物料搜索
+     * @param String $q 搜索关键字
+     * @return 搜索结果的第一个商品的淘宝客推广短链接
+     */
+    protected function TbkDgMaterialOptional(String $q)
+    {
+        $client = Factory::taobao ();
+        $req = new TbkDgMaterialOptionalRequest();
+        $req->setQ ($q);
+        $adzoneId = config('easytbk.taobao.pid');
+        $req->setAdzoneId($adzoneId);
+        $res = $client->execute ($req);
+        //print_r($res);
+        if( isset($res->error_response))
+        {
+            return $res->error_response->sub_msg;
+        }else{
+            if ($res->total_results >=1){
+                $long_url = $res->result_list->map_data[0]->url;
+                //转成端链接后再返回
+                //print($long_url);
+                return $this->TbkSpreadGet('https:'. $long_url);
+            }else{
+                return "未搜索到结果";
+            }
         }
     }
 
@@ -103,7 +134,7 @@ class TaoKe extends Controller
             
         }elseif($kind == 'tb'){
 
-            $short_url = $this->TbkSpreadGet($source_url);
+            $short_url = $this->TbkDgMaterialOptional($source_url);
 
             $result = ['data'=>['url'=>$short_url]];
 
