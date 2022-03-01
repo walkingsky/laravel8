@@ -9,8 +9,9 @@ use NiuGengYun\EasyTBK\Factory;
 
 use NiuGengYun\EasyTBK\pinduoduo\request\DdkGoodsZsUnitUrlGenRequest;
 use NiuGengYun\EasyTBK\taobao\request\TbkSpreadGetRequest;
-use NiuGengYun\EasyTBK\jingdong\request\JdUnionPromotionCommonGetRequest;
 use NiuGengYun\EasyTBK\taobao\request\TbkDgMaterialOptionalRequest;
+use NiuGengYun\EasyTBK\jingdong\request\JdUnionPromotionCommonGetRequest;
+//use NiuGengYun\EasyTBK\jingdong\request\JdUnionSellingPromotionGetRequest;
 
 class TaoKe extends Controller
 {
@@ -98,11 +99,36 @@ class TaoKe extends Controller
         $res_json = json_decode($res['jd_union_open_promotion_common_get_response']['result']);
         if ($res_json->code == 200){
             return $res_json->data->clickURL;
+            //return $this->JDSpreadGet_($res_json->data->clickURL);
         }else{
             //return false;
             return $res_json->message;
         }
     }
+
+    /**
+     * 京东京粉地址转换
+     * @param String $source_url 要转换的原地址
+     * @return String 转换后的短地址
+     */
+    /*
+    protected function JDSpreadGet_(String $source_url)
+    {
+        $client = Factory::jingdong();
+        $req = new JdUnionSellingPromotionGetRequest;
+        $req->setMaterialId ($source_url);
+        $req->setSiteId('4100660886');
+        $res = $client->execute ($req);
+        //print_r($res);
+        $res_json = json_decode($res['jd_union_open_selling_promotion_get_response']['result']);
+        if ($res_json->code == 200){
+            return $res_json->data->shortURL;
+        }else{
+            //return false;
+            return $res_json->message;
+        }
+    }
+    */
 
     
     /**
@@ -140,7 +166,6 @@ class TaoKe extends Controller
 
             echo json_encode($result);
         }else{
-            //echo json_encode(['data'=>['url'=>'暂时还未支持']]);
             $short_url = $this->JDSpreadGet($source_url);
 
             $result = ['data'=>['url'=>$short_url]];
