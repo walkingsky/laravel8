@@ -68,9 +68,11 @@ class TaoKe extends Controller
         $req->setAdzoneId($adzoneId);
         $res = $client->execute ($req);
         //print_r($res);
-        if( isset($res->error_response))
+        if( isset($res->error_response) )
         {
             return $res->error_response->sub_msg;
+        }else if(isset($res->code) and isset($res->sub_msg)){
+            return $res->sub_msg;
         }else{
             if ($res->total_results >=1){
                 $long_url = $res->result_list->map_data[0]->url;
