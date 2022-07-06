@@ -75,11 +75,12 @@ class TaoKe extends Controller
             return $res->sub_msg;
         }else{
             if ($res->total_results >=1){
-                $coupon_share_url = '';
+                $coupon_share_url = '没有优惠券';
                 if ( isset($res->result_list->map_data[0]->coupon_share_url ))
-                        $coupon_share_url = $res->result_list->map_data[0]->coupon_share_url;
-                        $coupon_share_url = $this->TbkSpreadGet('https:'. $coupon_share_url);
-
+                {
+                    $coupon_share_url = $res->result_list->map_data[0]->coupon_share_url;
+                    $coupon_share_url = $this->TbkSpreadGet('https:'. $coupon_share_url);
+                }
 
                 $long_url = $res->result_list->map_data[0]->url;
                 $long_url = $this->TbkSpreadGet('https:'. $long_url);
