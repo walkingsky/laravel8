@@ -75,11 +75,17 @@ class TaoKe extends Controller
             return $res->sub_msg;
         }else{
             if ($res->total_results >=1){
+                $coupon_share_url = '';
+                if ( isset($res->result_list->map_data[0]->coupon_share_url ))
+                        $coupon_share_url = $res->result_list->map_data[0]->coupon_share_url;
+                        $coupon_share_url = $this->TbkSpreadGet('https:'. $coupon_share_url);
+
+
                 $long_url = $res->result_list->map_data[0]->url;
-                //转成端链接后再返回
-                //print($long_url);
-                return $long_url;
-                //return $this->TbkSpreadGet('https:'. $long_url);
+                $long_url = $this->TbkSpreadGet('https:'. $long_url);
+
+                return array('long_url'=>$long_url,'coupon_share_url'=>$coupon_share_url);
+                //return 
             }else{
                 return "未搜索到结果";
             }
@@ -165,7 +171,7 @@ class TaoKe extends Controller
 
             $short_url = $this->TbkDgMaterialOptional($source_url);
 
-            $result = ['data'=>['url'=>$short_url]];
+            $result = ['data'=>['url'=>$short_url['long_url'],'coupon_share_url'=>$short_url['coupon_share_url']]];
 
             echo json_encode($result);
         }else{
