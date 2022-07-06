@@ -78,7 +78,8 @@ class TaoKe extends Controller
                 $long_url = $res->result_list->map_data[0]->url;
                 //转成端链接后再返回
                 //print($long_url);
-                return $this->TbkSpreadGet('https:'. $long_url);
+                return $long_url;
+                //return $this->TbkSpreadGet('https:'. $long_url);
             }else{
                 return "未搜索到结果";
             }
