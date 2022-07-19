@@ -174,7 +174,7 @@ class TaoKe extends Controller
             if(!isset($short_url['long_url'])  and !empty($short_url['long_url']))
                 $result = ['data'=>['url'=>$short_url['long_url'],'coupon_share_url'=>$short_url['coupon_share_url']]];
             else
-                $result = ['data'=>['url'=>$short_url]];
+                $result = ['data'=>['url'=>$short_url,'coupon_share_url'=>'没有优惠券']];
 
             echo json_encode($result);
         }else{
